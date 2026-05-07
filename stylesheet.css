@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【マッチングアプリの不都合な真実】非モテ脱却の完全攻略マニュアル</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Slate Gray, Crimson Red (for NG/Harsh truths), Emerald Green (for OK/Solutions) -->
+    <!-- Application Structure Plan: The application uses a dashboard-style step-by-step funnel structure. Because the source report is a sequential guide (Photo -> Profile -> Message -> LINE -> Date), a left-navigation (or top-nav on mobile) stepper allows users to explore each phase logically. A radar chart at the top visualizes the "gap" between a failed approach and a successful approach to ground the qualitative data in a quantitative mindset. A CSS-based "smartphone mockup" provides immediate visual context for the NG/OK examples without using external images. -->
+    <!-- Visualization & Content Choices: 
+         1. Radar Chart (Chart.js): Shows the required 'Market Value' vs 'Typical Unpopular State' across the 5 phases. Goal: Compare/Inform. Justification: Visually demonstrates why the user is failing overall before diving into specifics.
+         2. Interactive Stepper Navigation (HTML/JS): Goal: Organize. Justification: Breaks down the text-heavy report into digestible, task-oriented chunks.
+         3. CSS Smartphone Mockup (HTML/Tailwind): Goal: Inform/Compare. Justification: Replaces the requested screenshots with interactive text-based mockups representing the NG/OK states, adhering to the NO SVG rule while providing crucial visual context.
+         4. Toggle Tabs (JS): Goal: Compare. Justification: Allows users to actively switch between NG (Harsh Truth) and OK (Strategy) states, reinforcing the learning. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .phone-mockup {
+            width: 280px;
+            height: 500px;
+            border-radius: 2rem;
+            border: 12px solid #1f2937;
+            background-color: #f9fafb;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 20px;
+            background-color: #1f2937;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            z-index: 10;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        
+        <header class="mb-12 text-center">
+            <h1 class="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">【マッチングアプリの不都合な真実】</h1>
+            <p class="text-xl md:text-2xl text-slate-600 font-bold mb-6">非モテ脱却の完全攻略マニュアル</p>
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 max-w-4xl mx-auto text-left">
+                <p class="text-lg font-bold text-red-600 mb-2">はじめに：なぜあなたはいつまでも結果が出ないのか？</p>
+                <p class="mb-4 text-slate-700 leading-relaxed">この資料を開いたということは、あなたは今、アプリで満足のいく結果を出せていないのだと思います。「いいねが来ない」「マッチしても返信が途切れる」「デートの約束ができない」。</p>
+                <p class="mb-4 font-bold text-slate-900 text-lg border-l-4 border-red-600 pl-4 bg-red-50 p-3 rounded-r-lg">残酷な真実をお伝えします。それは、あなたが「誠実さ」や「優しさ」を言い訳にして、女性が男性に求めている『市場価値』から目を背けてしまっているからです。</p>
+                <p class="text-slate-700 leading-relaxed">このアプリでは、耳障りの良い恋愛アドバイスでは絶対に語られない「アプリの現実」を論理的に解説します。耳が痛い内容も多いかもしれません。しかし、ここに書かれていることを実践できなければ、あなたはこの先も無駄な時間とお金を費やし続けることになります。</p>
+            </div>
+        </header>
+
+        <section class="mb-16">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+                <h2 class="text-2xl font-bold text-slate-900 mb-4 border-b-2 border-slate-100 pb-2">市場価値のギャップ分析</h2>
+                <p class="text-slate-600 mb-6">
+                    このセクションでは、あなたがなぜアプリで失敗しているのか、その根本的な原因を可視化します。多くの男性は「誠実さ」という名目で自己満足に陥り、各フェーズで求められる基準値（トップ10%の強者）に全く届いていません。以下のチャートで、あなたが埋めるべき「残酷なギャップ」を確認してください。
+                </p>
+                <div class="chart-container">
+                    <canvas id="marketValueChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 border-l-4 border-slate-800 pl-4">完全攻略ステップ</h2>
+            <p class="text-slate-600 mb-8">
+                ここでは、アプリ攻略のための5つのフェーズを順を追って解説します。左側のメニューから各ステップを選択し、あなたの致命的な勘違い（NG）と、論理的な攻略の真実（OK）を比較・学習してください。右側のスマートフォン画面では、実際のアプリ上でどのように見えるかを再現しています。
+            </p>
+
+            <div class="flex flex-col md:flex-row gap-8">
+                
+                <div class="w-full md:w-1/3">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden sticky top-4">
+                        <ul id="step-nav" class="flex flex-row md:flex-col overflow-x-auto scrollbar-hide">
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-2/3">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 min-h-[600px] flex flex-col xl:flex-row gap-8">
+                        
+                        <div class="flex-1">
+                            <h3 id="content-title" class="text-3xl font-black text-slate-900 mb-6 tracking-tight"></h3>
+                            
+                            <div class="mb-6">
+                                <div class="flex space-x-2 mb-4">
+                                    <button id="btn-ng" class="px-4 py-2 rounded-lg font-bold transition-colors bg-red-100 text-red-700 border-2 border-red-200">⚠️ 致命的な勘違い</button>
+                                    <button id="btn-ok" class="px-4 py-2 rounded-lg font-bold transition-colors bg-slate-100 text-slate-600 border-2 border-transparent hover:bg-slate-200">💡 攻略の真実</button>
+                                </div>
+                                
+                                <div id="content-ng-block" class="bg-red-50 border border-red-200 p-5 rounded-xl">
+                                    <h4 id="ng-headline" class="font-bold text-red-800 text-lg mb-3"></h4>
+                                    <p id="ng-text" class="text-red-900 leading-relaxed"></p>
+                                </div>
+
+                                <div id="content-ok-block" class="bg-emerald-50 border border-emerald-200 p-5 rounded-xl hidden">
+                                    <h4 class="font-bold text-emerald-800 text-lg mb-3">論理的解決策</h4>
+                                    <div id="ok-text" class="text-emerald-900 leading-relaxed space-y-2"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-none flex justify-center items-start">
+                            <div class="phone-mockup">
+                                <div class="phone-notch"></div>
+                                <div id="mockup-header" class="bg-slate-100 h-16 w-full flex items-end justify-center pb-2 font-bold text-sm text-slate-500 border-b border-slate-200">
+                                    <span id="mockup-status-text">NG例</span>
+                                </div>
+                                <div id="mockup-body" class="p-4 h-[calc(100%-4rem)] overflow-y-auto bg-white flex flex-col">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 bg-slate-900 text-white rounded-3xl p-8 md:p-12 text-center shadow-xl">
+            <h2 class="text-2xl md:text-3xl font-black mb-6">知識を得ただけで満足してしまう方へ</h2>
+            <p class="text-slate-300 mb-4 max-w-2xl mx-auto leading-relaxed">
+                ここまで読んで、「なるほど、ためになった」と満足して閉じてしまう方は、残念ながら今の現状から抜け出すことはできません。ノウハウを知っただけで、あなたの写真の選び方や、文章の癖が明日から完璧に直るわけではないからです。
+            </p>
+            <p class="text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                自分で自分の第一印象を客観的に判断できるでしょうか？<br>
+                自分の書いた文章が、女性の目にどう映っているか正確に判断できるでしょうか？<br>
+                <strong class="text-white">それは非常に困難です。だからこそ、多くの方が同じ失敗を繰り返してしまうのです。</strong>
+            </p>
+            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 max-w-xl mx-auto mb-8">
+                <p class="text-lg font-bold mb-2">本気で現状を変えたい方限定</p>
+                <p class="text-sm text-slate-400">プロによる客観的な視点を取り入れるのが最も確実で最短のルートです。</p>
+            </div>
+            <button class="bg-emerald-500 hover:bg-emerald-400 text-white font-black py-4 px-8 rounded-full text-lg md:text-xl transition-transform transform hover:scale-105 shadow-lg shadow-emerald-500/30">
+                💬 無料プロフィール診断に申し込む
+            </button>
+            <p class="text-xs text-slate-500 mt-4">※本気で現状を変えたいと行動できる方限定とさせていただきます。</p>
+        </section>
+
+    </div>
+
+    <script>
+        const appData = [
+            {
+                id: 1,
+                title: "第1章：写真選定",
+                icon: "📸",
+                ngHeadline: "「顔に自信がないから、せめて誠実そうな自撮りにしよう」",
+                ngText: "即、左スワイプ（足切り）されます。女性は写真から「誠実さ」など読み取っていません。見ているのは「隣を歩いて恥ずかしくないか（最低限の清潔感とスペック）」だけです。洗面所の鏡で撮った自撮りや、ラーメンのドアップ写真を載せている時点で、あなたは戦いのスタートラインにすら立てていません。",
+                okText: "写真は「イケメンに偽装する」のではなく、「マイナス要素を完全に削ぎ落とし、他撮り風のプロ感を演出する」のが正解です。<br><br><b>1. メイン写真:</b> 他撮り（プロに頼むか、友人に一眼で撮ってもらう）。画質が命です。無理な笑顔は不要で、口角を少し上げるだけで十分。背景は自然光の入るカフェや清潔な街中一択です。<br><b>2. サブ写真:</b> 全身（体型の証明）、趣味（ただし女性ウケが良いもの。マニアックすぎるものは避ける）、動物（無難に親しみやすさを上げる）。",
+                mockup: {
+                    ng: `
+                        <div class="flex-1 flex flex-col space-y-4">
+                            <div class="w-full h-64 bg-slate-300 rounded-xl flex items-center justify-center border-4 border-dashed border-slate-400 relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-400 opacity-50"></div>
+                                <span class="text-4xl relative z-10">🤳🚽</span>
+                                <div class="absolute bottom-2 right-2 text-xs font-bold text-red-600 bg-white px-2 py-1 rounded shadow">画質粗悪/洗面所</div>
+                            </div>
+                            <div class="flex space-x-2 overflow-x-hidden">
+                                <div class="w-16 h-16 bg-slate-200 rounded-lg flex items-center justify-center text-xl">🍜</div>
+                                <div class="w-16 h-16 bg-slate-200 rounded-lg flex items-center justify-center text-xl">🍻</div>
+                                <div class="w-16 h-16 bg-slate-200 rounded-lg flex items-center justify-center text-xl">😎</div>
+                            </div>
+                        </div>
+                    `,
+                    ok: `
+                        <div class="flex-1 flex flex-col space-y-4">
+                            <div class="w-full h-64 bg-emerald-100 rounded-xl flex items-center justify-center border-4 border-solid border-emerald-200 relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-tr from-amber-100 to-white opacity-60"></div>
+                                <span class="text-4xl relative z-10">☕️🌿</span>
+                                <div class="absolute bottom-2 right-2 text-xs font-bold text-emerald-700 bg-white px-2 py-1 rounded shadow">他撮り風/自然光/高画質</div>
+                            </div>
+                            <div class="flex space-x-2 overflow-x-hidden">
+                                <div class="w-16 h-16 bg-emerald-50 border border-emerald-100 rounded-lg flex items-center justify-center text-xl">🚶‍♂️</div>
+                                <div class="w-16 h-16 bg-emerald-50 border border-emerald-100 rounded-lg flex items-center justify-center text-xl">🐕</div>
+                                <div class="w-16 h-16 bg-emerald-50 border border-emerald-100 rounded-lg flex items-center justify-center text-xl">🏕️</div>
+                            </div>
+                        </div>
+                    `
+                }
+            },
+            {
+                id: 2,
+                title: "第2章：プロフ作成",
+                icon: "📝",
+                ngHeadline: "「自分のことを分かってもらうために、趣味や生い立ちを詳しく丁寧に書こう」",
+                ngText: "あなたの自分語りを、最初から熱心に読んでくれる女性はいません。ここは履歴書ではないのです。長文で隙間なく文字が埋まっているプロフィールを見た瞬間、女性は「重い」「めんどくさそう」と判断して離脱します。",
+                okText: "プロフィールは「読ませる」のではなく「パッと見でスペックと人柄を把握させる」ものです。<br><br><b>1. 箇条書きの徹底:</b> 仕事、趣味、休日の過ごし方、アプリを始めた理由。これらを箇条書きでスマートにまとめます。<br><b>2. ネガティブ要素の完全排除:</b> 「人見知りですが」「使い方がよくわかりませんが」といった予防線は、ただの「自信のなさの表れ」です。今すぐ削除してください。<br><b>3. ベネフィットの提示:</b> 「自分と付き合うとどんなメリットがあるか」をさりげなく匂わせます。（例：美味しいお店巡りが好きなので、素敵なお店にご案内します）",
+                mockup: {
+                    ng: `
+                        <div class="flex-1 overflow-y-auto text-xs text-slate-600 space-y-2">
+                            <p>はじめまして！プロフィール見ていただきありがとうございます。〇〇県出身で、今は都内で〇〇の仕事をしています。</p>
+                            <p>趣味はゲームとアニメ鑑賞です。休日は家でずっとゲームをしていることが多いです。あまり外に出るタイプではありませんが、仲良くなったら出かけたいです。</p>
+                            <p>性格は少し人見知りで、最初は話すのが苦手かもしれませんが、慣れるとよく話すと言われます。</p>
+                            <p>アプリは友達に勧められて最近始めました。まだ使い方がよくわかっていなくて不手際があるかもしれませんが、よろしくお願いします。</p>
+                            <p>誠実なお付き合いができる方を探しています。少しでも気になったらいいねお願いします！</p>
+                            <div class="text-center mt-4 text-red-500 font-bold border border-red-500 p-1 rounded bg-red-50">重い・読みにくい・予防線</div>
+                        </div>
+                    `,
+                    ok: `
+                        <div class="flex-1 overflow-y-auto text-xs text-slate-700 space-y-3">
+                            <p class="font-bold text-sm">はじめまして！都内で〇〇をしています。</p>
+                            <ul class="space-y-1">
+                                <li>💼 仕事：IT系で企画職</li>
+                                <li>🏠 休日：カフェ巡り、映画館</li>
+                                <li>🍷 趣味：美味しいお店を開拓すること</li>
+                            </ul>
+                            <p>美味しいご飯を食べるのが好きなので、一緒にお店巡りできたら嬉しいです！</p>
+                            <p>お互いリラックスして、まずは楽しくお話ししましょう☺️</p>
+                            <p>よろしくお願いします！</p>
+                            <div class="text-center mt-4 text-emerald-600 font-bold border border-emerald-500 p-1 rounded bg-emerald-50">箇条書き・ポジティブ・ベネフィット</div>
+                        </div>
+                    `
+                }
+            },
+            {
+                id: 3,
+                title: "第3章：初回メッセージ",
+                icon: "💬",
+                ngHeadline: "「マッチしてくれてありがとうございます！〇〇といいます。よろしくお願いします！」",
+                ngText: "息をするように既読無視される典型的なテンプレートです。人気女性は毎日、大勢の男性から全く同じメッセージを受け取っています。なぜあなたのそのメッセージだけが特別扱いされると思うのでしょうか。これではその他大勢に埋もれて当然です。",
+                okText: "初回メッセージの目的は「相手が返信するためのハードルを極限まで下げること」です。<br><br><b>1. テンプレ挨拶の排除:</b> 挨拶は短く。すぐに本題（相手のプロフや写真の内容）に入ります。<br><b>2. 軽い質問:</b> 相手の写真やプロフの「女性がこだわっていそうな部分（カフェ、旅行、ペットなど）」に触れ、答えやすい質問を投げます。<br><b>3. 長文厳禁:</b> 相手に「しっかり返さなきゃ」というプレッシャーを与えないこと。2行、長くても3行に収めてください。",
+                mockup: {
+                    ng: `
+                        <div class="flex flex-col space-y-3 text-xs">
+                            <div class="self-end bg-blue-100 p-3 rounded-2xl rounded-tr-none max-w-[85%] text-slate-700 shadow-sm">
+                                マッチングありがとうございます！〇〇といいます。写真の笑顔が素敵だなと思っていいねしました！<br>趣味も合いそうなので、色々お話しできたら嬉しいです。<br>よろしくお願いします！🙇‍♂️
+                            </div>
+                            <div class="text-center text-slate-400 mt-4 text-[10px]">既読無視</div>
+                            <div class="self-start text-red-500 font-bold border border-red-200 bg-red-50 p-2 rounded-lg text-[10px] w-full text-center mt-auto">その他大勢のテンプレ・返信しづらい</div>
+                        </div>
+                    `,
+                    ok: `
+                        <div class="flex flex-col space-y-3 text-xs">
+                            <div class="self-end bg-emerald-100 p-3 rounded-2xl rounded-tr-none max-w-[85%] text-slate-800 shadow-sm border border-emerald-200">
+                                マッチありがとうございます！<br>写真のカフェ、〇〇のあたりですか？雰囲気良くて気になってました！☕️
+                            </div>
+                            <div class="self-start bg-slate-100 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-slate-700 shadow-sm mt-2">
+                                ありがとうございます！そうです、〇〇の路地裏にあるカフェです🍰
+                            </div>
+                            <div class="self-start text-emerald-600 font-bold border border-emerald-200 bg-emerald-50 p-2 rounded-lg text-[10px] w-full text-center mt-auto">短文・相手の写真に触れる・答えやすい質問</div>
+                        </div>
+                    `
+                }
+            },
+            {
+                id: 4,
+                title: "第4章：LINE移行",
+                icon: "📲",
+                ngHeadline: "「ある程度仲良くなってから、誠実なタイミングでLINEを聞こう」",
+                ngText: "いつまで「アプリ内の文通相手」を続けるつもりですか？時間をかければかけるほど、他の決断力のある男性に女性を奪われるだけです。「誠実さ」を盾にして、リスクを取ることから逃げないでください。",
+                okText: "LINE移行は「タイミングと理由」が全てです。無意味にダラダラとやり取りを続けないこと。<br><br><b>1. ベストタイミング:</b> メッセージのラリーが5〜7往復し、話題が盛り上がった（感情が動いた）直後です。<br><b>2. 大義名分（言い訳）:</b> 「アプリだと通知に気づきにくくて」「お店のURL送りたいので」など、相手がLINEを教える「もっともらしい理由」を用意してあげます。<br><b>3. スマートな打診:</b> 「もしよかったらLINEしませんか？」と判断を委ねるのではなく、「LINEのほうが連絡しやすいので、こっち追加しておいてください [URL]」とリードします。",
+                mockup: {
+                    ng: `
+                        <div class="flex flex-col space-y-2 text-[10px] overflow-y-auto">
+                            <div class="self-end bg-blue-100 p-2 rounded-xl rounded-tr-none">休日は何してるんですか？</div>
+                            <div class="self-start bg-slate-100 p-2 rounded-xl rounded-tl-none">映画見たりですねー</div>
+                            <div class="self-end bg-blue-100 p-2 rounded-xl rounded-tr-none">いいですね！最近何見ました？</div>
+                            <div class="self-start bg-slate-100 p-2 rounded-xl rounded-tl-none">〇〇を見ました。</div>
+                            <div class="self-end bg-blue-100 p-2 rounded-xl rounded-tr-none">面白そうですね！僕も見てみます。<br>ところで、もしよかったらそろそろLINE交換しませんか？💦</div>
+                            <div class="text-center text-slate-400 mt-2">... (返信なし)</div>
+                            <div class="text-red-500 font-bold border border-red-200 bg-red-50 p-1 rounded text-center mt-auto">無駄なラリー・突然の打診・判断の丸投げ</div>
+                        </div>
+                    `,
+                    ok: `
+                        <div class="flex flex-col space-y-2 text-[10px] overflow-y-auto">
+                            <div class="self-start bg-slate-100 p-2 rounded-xl rounded-tl-none">お酒好きなんですね！よく飲みに行きますか？🍷</div>
+                            <div class="self-end bg-emerald-100 p-2 rounded-xl rounded-tr-none">行きます！最近は〇〇駅周辺の立ち飲み開拓してます笑</div>
+                            <div class="self-start bg-slate-100 p-2 rounded-xl rounded-tl-none">あそこいいですよね！私も気になってるお店いくつかあります！</div>
+                            <div class="self-end bg-emerald-100 p-2 rounded-xl rounded-tr-none border border-emerald-200">
+                                おっ、いいですね！<br>おすすめのお店リストあるんでLINEで送りますね！アプリだとURL開きにくくて🙏<br>【LINEのURL】
+                            </div>
+                            <div class="text-emerald-600 font-bold border border-emerald-200 bg-emerald-50 p-1 rounded text-center mt-auto">盛り上がった直後・理由付け・自然な誘導</div>
+                        </div>
+                    `
+                }
+            },
+            {
+                id: 5,
+                title: "第5章：デート打診",
+                icon: "🥂",
+                ngHeadline: "「今度、どこか空いてる日に遊びに行きませんか？」",
+                ngText: "相手に日程や場所を考えさせないでください。女性はまだあなたに強い興味があるわけではありません。丸投げの態度は「私はエスコートもできない頼りない男です」と宣言しているのと同じです。",
+                okText: "デートの打診は「相手が断る理由を無くす作業」です。<br><br><b>1. 二者択一で提案する:</b> 「いつ空いてる？」ではなく「来週の金曜か土曜、どっちか空いてる？」と選択肢を絞ります。<br><b>2. 目的を明確にする:</b> 「遊びに行こう」という漠然としたものではなく、「〇〇（相手が好きな食べ物）の美味しい店があるから、軽く行かない？」と、食事を理由にします。<br><b>3. 初回は「短時間」で「昼間・夕方」:</b> いきなり夜の深い時間帯の飲みは警戒されます。初回は「休日の昼間・夕方の1〜2時間」でサクッと解散する提案が最も成功率が高いです。",
+                mockup: {
+                    ng: `
+                        <div class="flex flex-col space-y-3 text-xs">
+                            <div class="self-end bg-blue-100 p-3 rounded-2xl rounded-tr-none max-w-[85%]">
+                                今度の日曜日、もし暇だったらどこか遊びに行きませんか？<br>何食べたいですか？空いてる時間教えてください！
+                            </div>
+                            <div class="self-start bg-slate-100 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-slate-500">
+                                今週はちょっと忙しくて...また予定わかったら連絡しますね💦
+                            </div>
+                            <div class="text-red-500 font-bold border border-red-200 bg-red-50 p-2 rounded-lg text-[10px] w-full text-center mt-auto">丸投げ・相手に考えさせる・断実やすい</div>
+                        </div>
+                    `,
+                    ok: `
+                        <div class="flex flex-col space-y-3 text-xs">
+                            <div class="self-end bg-emerald-100 p-3 rounded-2xl rounded-tr-none max-w-[85%] border border-emerald-200">
+                                〇〇好きって言ってたよね！<br>駅前に美味しいお店見つけたから、来週の水曜か金曜の夜、サクッと1時間くらいどう？🍽️
+                            </div>
+                            <div class="self-start bg-slate-100 p-3 rounded-2xl rounded-tl-none max-w-[85%]">
+                                いいですね！水曜なら仕事終わりにいけます✨
+                            </div>
+                            <div class="text-emerald-600 font-bold border border-emerald-200 bg-emerald-50 p-2 rounded-lg text-[10px] w-full text-center mt-auto">二者択一・目的明確・サクッと(低ハードル)</div>
+                        </div>
+                    `
+                }
+            }
+        ];
+
+        let currentState = {
+            activeStep: 0,
+            viewMode: 'ng' // 'ng' or 'ok'
+        };
+
+        // Initialize UI
+        function initApp() {
+            renderNavigation();
+            updateContent();
+            initChart();
+        }
+
+        // Render Sidebar Navigation
+        function renderNavigation() {
+            const navContainer = document.getElementById('step-nav');
+            navContainer.innerHTML = '';
+
+            appData.forEach((step, index) => {
+                const li = document.createElement('li');
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-4 py-4 md:py-5 border-b border-slate-100 font-bold transition-colors flex items-center space-x-3 whitespace-nowrap md:whitespace-normal ${index === currentState.activeStep ? 'bg-slate-800 text-white border-l-4 border-l-emerald-400' : 'text-slate-600 hover:bg-slate-50 border-l-4 border-l-transparent'}`;
+                
+                btn.innerHTML = `<span class="text-xl">${step.icon}</span> <span>${step.title}</span>`;
+                btn.onclick = () => {
+                    currentState.activeStep = index;
+                    currentState.viewMode = 'ng'; // reset to NG view on change
+                    renderNavigation();
+                    updateContent();
+                };
+                li.appendChild(btn);
+                navContainer.appendChild(li);
+            });
+        }
+
+        // Update Main Content Area
+        function updateContent() {
+            const data = appData[currentState.activeStep];
+            
+            document.getElementById('content-title').innerText = `${data.icon} ${data.title}`;
+            
+            document.getElementById('ng-headline').innerText = data.ngHeadline;
+            document.getElementById('ng-text').innerText = data.ngText;
+            document.getElementById('ok-text').innerHTML = data.okText;
+
+            const btnNg = document.getElementById('btn-ng');
+            const btnOk = document.getElementById('btn-ok');
+            const blockNg = document.getElementById('content-ng-block');
+            const blockOk = document.getElementById('content-ok-block');
+            const mockupHeader = document.getElementById('mockup-header');
+            const mockupStatus = document.getElementById('mockup-status-text');
+            const mockupBody = document.getElementById('mockup-body');
+
+            if (currentState.viewMode === 'ng') {
+                btnNg.className = "px-4 py-2 rounded-lg font-bold transition-colors bg-red-100 text-red-700 border-2 border-red-300 shadow-sm";
+                btnOk.className = "px-4 py-2 rounded-lg font-bold transition-colors bg-slate-100 text-slate-500 border-2 border-transparent hover:bg-slate-200";
+                blockNg.classList.remove('hidden');
+                blockOk.classList.add('hidden');
+                
+                mockupHeader.className = "bg-red-50 h-16 w-full flex items-end justify-center pb-2 font-bold text-sm text-red-600 border-b border-red-200 transition-colors";
+                mockupStatus.innerText = "NG例 (失敗パターン)";
+                mockupBody.innerHTML = data.mockup.ng;
+                
+            } else {
+                btnNg.className = "px-4 py-2 rounded-lg font-bold transition-colors bg-slate-100 text-slate-500 border-2 border-transparent hover:bg-slate-200";
+                btnOk.className = "px-4 py-2 rounded-lg font-bold transition-colors bg-emerald-100 text-emerald-700 border-2 border-emerald-300 shadow-sm";
+                blockNg.classList.add('hidden');
+                blockOk.classList.remove('hidden');
+
+                mockupHeader.className = "bg-emerald-50 h-16 w-full flex items-end justify-center pb-2 font-bold text-sm text-emerald-600 border-b border-emerald-200 transition-colors";
+                mockupStatus.innerText = "OK例 (攻略パターン)";
+                mockupBody.innerHTML = data.mockup.ok;
+            }
+        }
+
+        // Toggle Buttons Listeners
+        document.getElementById('btn-ng').addEventListener('click', () => {
+            currentState.viewMode = 'ng';
+            updateContent();
+        });
+        document.getElementById('btn-ok').addEventListener('click', () => {
+            currentState.viewMode = 'ok';
+            updateContent();
+        });
+
+        // Initialize Chart.js Radar Chart
+        function initChart() {
+            const ctx = document.getElementById('marketValueChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['写真の質 (他撮り感)', 'プロフ構成 (見やすさ)', '初回MSG (軽さ)', 'LINE移行 (タイミング)', 'デート打診 (エスコート力)'],
+                    datasets: [
+                        {
+                            label: '非モテの現状 (NG)',
+                            data: [20, 30, 15, 20, 10],
+                            backgroundColor: 'rgba(239, 68, 68, 0.2)', // Red
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            pointBackgroundColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 2,
+                        },
+                        {
+                            label: 'トップ10%の基準値 (OK)',
+                            data: [95, 90, 85, 90, 95],
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)', // Emerald
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            pointBackgroundColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 2,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            pointLabels: {
+                                font: { size: 12, family: 'sans-serif', weight: 'bold' },
+                                color: '#1e293b'
+                            },
+                            ticks: {
+                                display: false, // hide numbers on rings
+                                min: 0,
+                                max: 100,
+                                stepSize: 20
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { family: 'sans-serif', weight: 'bold' },
+                                color: '#334155',
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + '点';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Run on load
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
